@@ -28,9 +28,6 @@ class Segmentation(object):
         for img in sub_images:
             img_rect = []
             mod_img, contours, hierarchy = cv.findContours(img, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE)
-            if len(contours) == 0:
-                cv.imshow("t", img)
-                return
             for contour in contours:
                 img_rect.append(cv.boundingRect(contour))
             img_rect = cv.groupRectangles(img_rect, 0)
@@ -47,11 +44,14 @@ class Segmentation(object):
             resized.append(cropped)
         return resized
 
+    def _thin(self, images):
+        return [cv.ximgproc.thinning(img) for img in images]
+
     def segmentize(self, input_img, is_gray=True):
         binarized = self._binarize(input_img, is_gray)
         sub_images = self._subdivide(binarized)
         bound_rects = self._bound_letter(sub_images)
-
-        return self._resize_letter(bound_rects, sub_images)
+        resized = self._resize_letter(bound_rects, sub_images)
+        return self._thin(resized)
 
 
