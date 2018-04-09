@@ -1,7 +1,7 @@
 import cv2 as cv
 import segmentation as sg
 import feature_extraction as fe
-import classifier
+import classifier as cl
 from util import get_labels
 
 DIM = 40
@@ -26,7 +26,7 @@ ext = fe.FeatureExtraction(EXTRACTION_STEP)
 training_input = preprocess(train, seg, ext, DIM)
 test_input = preprocess(test, seg, ext, DIM)
 
-svm = classifier.Classifier("SVM")
+svm = cl.Classifier(cl.CLASS_BAYES)
 svm.train(training_input)
 result = svm.predict(test_input)
 
