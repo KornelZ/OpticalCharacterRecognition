@@ -14,10 +14,10 @@ class Classifier(object):
         if classifier is CLASS_SVM:
             self.classifier = cv.ml.SVM_create()
             self.classifier.setType(cv.ml.SVM_C_SVC)
-            self.classifier.setKernel(cv.ml.SVM_INTER) #75% accuracy, no params required
+            self.classifier.setKernel(cv.ml.SVM_INTER) #80% accuracy, no params required
             #45$ accuracy for linear kernel
         elif classifier is CLASS_BAYES:
-            self.classifier = cv.ml.NormalBayesClassifier_create()
+            self.classifier = cv.ml.NormalBayesClassifier_create() #80%
 
     def train(self, input):
         train_arr = np.array(input[0], np.float32)

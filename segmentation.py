@@ -13,11 +13,10 @@ class Segmentation(object):
     def _binarize(self, img, is_gray):
         if not is_gray:
             img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-        return cv.threshold(img, self.bin_threshold, 255, cv.THRESH_BINARY_INV)
+        return cv.threshold(img, self.bin_threshold, 255,  cv.THRESH_BINARY_INV)
 
     def _subdivide(self, img):
         sub_images = []
-        img = img[1]
         for y in range(0, img.shape[0], self.segment_height):
             for x in range(0, img.shape[1], self.segment_width):
                 sub_images.append(img[y:y + self.segment_height, x:x + self.segment_width])
@@ -47,8 +46,8 @@ class Segmentation(object):
     def _thin(self, images):
         return [cv.ximgproc.thinning(img) for img in images]
 
-    def segmentize(self, input_img, is_gray=True):
-        binarized = self._binarize(input_img, is_gray)
+    def segment(self, input_img, is_gray=False):
+        binarized = self._binarize(input_img, is_gray)[1]
         sub_images = self._subdivide(binarized)
         bound_rects = self._bound_letter(sub_images)
         resized = self._resize_letter(bound_rects, sub_images)
