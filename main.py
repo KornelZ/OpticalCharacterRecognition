@@ -16,14 +16,14 @@ def preprocess(input, segmentation, extraction, dim):
     return [feature_vector, labels]
 
 
-src = cv.imread("letters.png")
+src = cv.imread("data\letters.png")
 train = src[:, :4 * src.shape[1] // 5]
 test = src[:, 4 * src.shape[1] // 5:]
 
 seg = sg.Segmentation(DIM, DIM, 225)
 ext = fe.FeatureExtraction(EXTRACTION_STEP)
 
-"""
+
 training_input = preprocess(train, seg, ext, DIM)
 test_input = preprocess(test, seg, ext, DIM)
 
@@ -38,7 +38,7 @@ for label, predicted in zip(test_input[1], result):
     if label == int(predicted[0]):
         count += 1
 print(count / len(test_input[1]))
-"""
+
 histogram = hist.HistogramSegmentation(DIM, DIM, 225)
 histogram.segment(src)
 
