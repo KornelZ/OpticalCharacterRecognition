@@ -3,11 +3,14 @@ import numpy as np
 
 CLASS_SVM = 0
 CLASS_BAYES = 1
-CLASS_ANN = 2
-CLASS_RTREES = 3
+CLASS_RTREES = 2
+CLASS_ANN = 3
 
 
 class Classifier(object):
+
+    RTREE_DEPTH = 16
+    MIN_SAMPLE_COUNT = 40
 
     def __init__(self, classifier):
         self.classifier_name = classifier
@@ -18,6 +21,10 @@ class Classifier(object):
             #45$ accuracy for linear kernel
         elif classifier is CLASS_BAYES:
             self.classifier = cv.ml.NormalBayesClassifier_create() #80%
+        elif classifier is CLASS_RTREES:
+            self.classifier = cv.ml.RTrees_create()
+            self.classifier.setMaxDepth(Classifier.RTREE_DEPTH)
+            self.classifier.setMinSampleCount(Classifier.MIN_SAMPLE_COUNT)
 
     def train(self, input):
         train_arr = np.array(input[0], np.float32)
