@@ -3,7 +3,7 @@ import cv2 as cv
 
 class Segmentation(object):
 
-    def __init__(self, segment_width, segment_height, bin_threshold=200):
+    def __init__(self, segment_width, segment_height, bin_threshold=225):
         self.segment_width = segment_width
         self.segment_height = segment_height
         self.resized_width = 32

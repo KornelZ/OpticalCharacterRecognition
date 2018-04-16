@@ -23,13 +23,13 @@ test = src[:, 4 * src.shape[1] // 5:]
 seg = sg.Segmentation(DIM, DIM, 225)
 ext = fe.FeatureExtraction(EXTRACTION_STEP)
 
-
+"""
 training_input = preprocess(train, seg, ext, DIM)
 test_input = preprocess(test, seg, ext, DIM)
 
-svm = cl.Classifier(cl.CLASS_SVM)
-svm.train(training_input)
-result = svm.predict(test_input)
+classifier = cl.Classifier(cl.CLASS_RTREES)
+classifier.train(training_input)
+result = classifier.predict(test_input)
 
 print(result)
 
@@ -39,7 +39,12 @@ for label, predicted in zip(test_input[1], result):
         count += 1
 print(count / len(test_input[1]))
 
+"""
 histogram = hist.HistogramSegmentation(DIM, DIM, 225)
-histogram.segment(src)
+words= histogram.segment(src)
+y0, y1, x0, x1, word = words[0]
+cv.imshow("", word[0])
+cv.waitKey()
+
 
 
