@@ -1,5 +1,6 @@
 import cv2 as cv
 
+
 class Histogram(object):
 
     def __init__(self, threshold):
@@ -13,7 +14,7 @@ class Histogram(object):
         if dimension == 0:
             input_dim = 1
         histogram = cv.reduce(input_img, input_dim, cv.REDUCE_SUM, dtype=cv.CV_32F)
-        total = input_img.shape[input_dim] * 255;
+        total = input_img.shape[input_dim] * 255
         for i in range(len(histogram)):
             histogram[i] /= total
 
@@ -40,9 +41,9 @@ class Histogram(object):
         curr_len = 0
         found_first = False
         for i in range(len(histogram[0])):
-            if histogram[0, i] < self.threshold and found_first:
+            if histogram[0, i] <= self.threshold and found_first:
                 curr_len += 1
-            elif histogram[0, i] >= self.threshold:
+            elif histogram[0, i] > self.threshold:
                 if curr_len > max_len:
                     max_len = curr_len
                 curr_len = 0
@@ -63,9 +64,9 @@ class Histogram(object):
                 words.append((start, start + word_len))
                 start = 0
                 word_len = 0
-            if histogram[0, i] < self.threshold:
+            if histogram[0, i] <= self.threshold:
                 space_len += 1
-            elif histogram[0, i] >= self.threshold:
+            elif histogram[0, i] > self.threshold:
                 if not found_word:
                     start = i
                 found_word = True

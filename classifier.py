@@ -21,7 +21,7 @@ class Classifier(object):
             #45$ accuracy for linear kernel
         elif classifier is CLASS_BAYES:
             self.classifier = cv.ml.NormalBayesClassifier_create() #80%
-        elif classifier is CLASS_RTREES:
+        elif classifier is CLASS_RTREES: #86
             self.classifier = cv.ml.RTrees_create()
             self.classifier.setMaxDepth(Classifier.RTREE_DEPTH)
             self.classifier.setMinSampleCount(Classifier.MIN_SAMPLE_COUNT)

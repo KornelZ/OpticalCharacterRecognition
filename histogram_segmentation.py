@@ -6,9 +6,9 @@ import segmentation as sg
 
 class HistogramSegmentation(sg.Segmentation):
 
-    def __init__(self, segment_width, segment_height, bin_threshold=225, threshold=0.1):
+    def __init__(self, segment_width, segment_height, bin_threshold=225, histogram_threshold=0.1):
         sg.Segmentation.__init__(self, segment_width, segment_height, bin_threshold)
-        self.histogram = histogram.Histogram(threshold)
+        self.histogram = histogram.Histogram(histogram_threshold)
 
     def _get_contours(self, input_img, lines, words_per_line):
         word_rects = []
@@ -55,4 +55,5 @@ class HistogramSegmentation(sg.Segmentation):
         words_per_line = self.histogram.find_words(binarized, lines)
         word_rects = self._get_contours(binarized, lines, words_per_line)
         resized = self._resize_letter(word_rects, binarized)
-        return self._thin(resized)
+
+        return self._thin(resized), binarized
