@@ -2,14 +2,15 @@ import cv2 as cv
 import numpy as np
 import histogram
 import segmentation as sg
-
+from util import log
 
 class HistogramSegmentation(sg.Segmentation):
 
-    def __init__(self, segment_width, segment_height, bin_threshold=225, histogram_threshold=0.1):
+    def __init__(self, segment_width, segment_height, bin_threshold=225, histogram_threshold=0):
         sg.Segmentation.__init__(self, segment_width, segment_height, bin_threshold)
         self.histogram = histogram.Histogram(histogram_threshold)
 
+    @log
     def _get_contours(self, input_img, lines, words_per_line):
         word_rects = []
 
@@ -21,10 +22,12 @@ class HistogramSegmentation(sg.Segmentation):
                 for contour in contours:
                     letters.append(cv.boundingRect(contour))
                 letters = cv.groupRectangles(letters, 0)
-                word_rects.append((line[0], line[1], word[0], word[1], letters[0]))
+                r = sorted(list(letters[0]), key=lambda l: l[0])
+                word_rects.append((line[0], line[1], word[0], word[1], r))
 
         return word_rects
 
+    @log
     def _resize_letter(self, rects, sub_images):
         resized_words = []
 
@@ -42,18 +45,20 @@ class HistogramSegmentation(sg.Segmentation):
 
         return resized_words
 
+    @log
     def _thin(self, images):
         for word in range(len(images)):
             for letter in range(len(images[word][-1])):
                 images[word][-1][letter] = cv.ximgproc.thinning(images[word][-1][letter])
 
-        return  images
+        return images
 
-    def segment(self, input_img, is_gray=False):
-        binarized = self._binarize(input_img, is_gray)[1]
+    @log
+    def segment(self, input_img):
+        binarized = self._binarize(input_img)[1]
         lines = self.histogram.find_lines(binarized)
         words_per_line = self.histogram.find_words(binarized, lines)
         word_rects = self._get_contours(binarized, lines, words_per_line)
         resized = self._resize_letter(word_rects, binarized)
 
-        return self._thin(resized), binarized
+        return self._thin(resized), binarized, word_rects

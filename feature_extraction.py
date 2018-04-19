@@ -1,5 +1,5 @@
 import cv2 as cv
-from util import is_white
+from util import is_white, log
 
 
 class FeatureExtraction(object):
@@ -20,5 +20,6 @@ class FeatureExtraction(object):
                 vector.append(count)
         return vector
 
+    @log
     def extract(self, images):
         return [self._count_white_pixels(img) for img in images]

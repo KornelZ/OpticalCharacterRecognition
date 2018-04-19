@@ -1,4 +1,5 @@
 import cv2 as cv
+from util import log
 
 
 class Segmentation(object):
@@ -10,10 +11,12 @@ class Segmentation(object):
         self.resized_height = 32
         self.bin_threshold = bin_threshold
 
+    @log
     def _binarize(self, img):
         img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
         return cv.threshold(img, self.bin_threshold, 255, cv.THRESH_BINARY_INV)
 
+    @log
     def _subdivide(self, img):
         sub_images = []
         for y in range(0, img.shape[0], self.segment_height):
@@ -21,6 +24,7 @@ class Segmentation(object):
                 sub_images.append(img[y:y + self.segment_height, x:x + self.segment_width])
         return sub_images
 
+    @log
     def _bound_letter(self, sub_images):
         bound_rects = []
         for img in sub_images:
@@ -32,6 +36,7 @@ class Segmentation(object):
             bound_rects.append(img_rect[0])
         return bound_rects
 
+    @log
     def _resize_letter(self, rects, sub_images):
         resized = []
         for img, rect in zip(sub_images, rects):
@@ -42,11 +47,14 @@ class Segmentation(object):
             resized.append(cropped)
         return resized
 
+    @log
     def _thin(self, images):
         return [cv.ximgproc.thinning(img) for img in images]
 
+    @log
     def segment(self, input_img):
         binarized = self._binarize(input_img)[1]
+        cv.imshow("t", binarized)
         sub_images = self._subdivide(binarized)
         bound_rects = self._bound_letter(sub_images)
         resized = self._resize_letter(bound_rects, sub_images)
