@@ -13,7 +13,7 @@ class Segmentation(object):
 
     @log
     def _binarize(self, img):
-        img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+        img = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
         return cv.threshold(img, self.bin_threshold, 255, cv.THRESH_BINARY_INV)
 
     @log
@@ -54,7 +54,6 @@ class Segmentation(object):
     @log
     def segment(self, input_img):
         binarized = self._binarize(input_img)[1]
-        cv.imshow("t", binarized)
         sub_images = self._subdivide(binarized)
         bound_rects = self._bound_letter(sub_images)
         resized = self._resize_letter(bound_rects, sub_images)

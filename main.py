@@ -6,15 +6,18 @@ import classifier as cl
 LETTER_SIZE = 40
 DIGIT_SIZE = 20
 EXTRACTION_STEP = 4
-BIN_THRESHOLD = 140
+BIN_THRESHOLD = 175
 
 
-def show_result(src, rects, result):
+def show_result(src, rects, result, use_letters):
     i = 0
     for word in rects:
         t = ""
         for _ in word[-1]:
-            t += chr(int(result[i]) + 65)
+            if use_letters:
+                t += chr(int(result[i]) + 65)
+            else:
+                t += chr(int(result[i]) + 48)
             i += 1
         cv.rectangle(src, (word[2], word[0]), (word[3], word[1]), (255, 0, 0), 3)
         cv.putText(src, t, (word[2], word[0]), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0))
@@ -44,7 +47,7 @@ def predict(path, use_letters, used_classifier):
     classifier = cl.Classifier(used_classifier, 64, 32)
     classifier.load(use_letters)
     result = classifier.predict((feature_vectors, 0))
-    show_result(src, rects, result)
+    show_result(src, rects, result, use_letters)
 
 
 def main():
